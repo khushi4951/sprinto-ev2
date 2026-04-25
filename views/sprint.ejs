@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title><%= pageTitle %></title>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <script src="/socket.io/socket.io.js"></script>
+  </head>
+  <body>
+    <main class="main" style="padding: 32px;">
+      <div class="row">
+        <div>
+          <div class="muted">Server-Side Rendered Sprint Page</div>
+          <h1 style="margin: 6px 0 0;"><%= sprint.name %></h1>
+          <div class="muted"><%= sprint.goal || "No sprint goal" %></div>
+        </div>
+        <div class="spacer"></div>
+        <a class="btn" href="/dashboard">Dashboard</a>
+        <a class="btn" href="/">SPA Board</a>
+      </div>
+
+      <section class="card" style="margin-top: 24px;">
+        <div class="row">
+          <span class="badge badge--<%= sprint.status === 'active' ? 'active' : sprint.status === 'completed' ? 'completed' : 'planned' %>">
+            <%= sprint.status %>
+          </span>
+          <span class="spacer"></span>
+          <span class="muted">Signed in as <%= user.name %></span>
+        </div>
+      </section>
+
+      <section class="card" style="margin-top: 24px;">
+        <h3 class="card__title">Sprint Issues</h3>
+        <div id="ssrUpdates" class="muted" style="margin-bottom: 12px;">Listening for board updates...</div>
+        <div class="grid">
+          <% issues.forEach(function (issue) { %>
+            <article class="card">
+              <div style="font-weight: 800;"><%= issue.title %></div>
+              <div class="muted"><%= issue.description || "No description" %></div>
+              <div style="margin-top: 10px;">Status: <strong><%= issue.status %></strong></div>
+            </article>
+          <% }) %>
+          <% if (!issues.length) { %>
+            <div class="muted">No issues assigned to this sprint.</div>
+          <% } %>
+        </div>
+      </section>
+    </main>
+
+    <script>
+      const socket = window.io();
+      socket.emit("joinBoard", "<%= sprint.id %>");
+      socket.on("updateBoard", function (payload) {
+        if (payload && payload.sprintId === "<%= sprint.id %>") {
+          document.getElementById("ssrUpdates").textContent =
+            "Real-time update received for issue " + payload.issueId + " -> " + payload.status;
+        }
+      });
+    </script>
+  </body>
+</html>

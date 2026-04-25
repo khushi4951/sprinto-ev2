@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title><%= pageTitle %></title>
+    <link rel="stylesheet" href="/css/styles.css" />
+  </head>
+  <body>
+    <main class="main" style="padding: 32px;">
+      <div class="row">
+        <div>
+          <div class="muted">Server-Side Rendered Dashboard</div>
+          <h1 style="margin: 6px 0 0;"><%= user.name %></h1>
+          <div class="muted"><%= user.email %> · <%= user.role %></div>
+        </div>
+        <div class="spacer"></div>
+        <a class="btn" href="/">Open SPA</a>
+      </div>
+
+      <div class="grid grid--3" style="margin-top: 24px;">
+        <section class="card">
+          <h3 class="card__title">Active Sprint</h3>
+          <% if (activeSprint) { %>
+            <div style="font-weight: 900;"><%= activeSprint.name %></div>
+            <div class="muted"><%= activeSprint.goal || "No sprint goal set" %></div>
+            <div style="margin-top: 12px;">
+              <a class="btn btn--primary" href="/sprints/<%= activeSprint.id %>">View sprint page</a>
+            </div>
+          <% } else { %>
+            <div class="muted">No active sprint exists yet.</div>
+          <% } %>
+        </section>
+
+        <section class="card">
+          <h3 class="card__title">Sprint Count</h3>
+          <div class="kpi"><%= sprints.length %></div>
+          <div class="muted">Loaded from MongoDB through EJS render data.</div>
+        </section>
+
+        <section class="card">
+          <h3 class="card__title">Issue Status Totals</h3>
+          <% if (issueStats.length) { %>
+            <% issueStats.forEach(function (item) { %>
+              <div class="row" style="margin-bottom: 6px;">
+                <span><%= item._id %></span>
+                <span class="spacer"></span>
+                <strong><%= item.count %></strong>
+              </div>
+            <% }) %>
+          <% } else { %>
+            <div class="muted">No issues available.</div>
+          <% } %>
+        </section>
+      </div>
+
+      <section class="card" style="margin-top: 24px;">
+        <h3 class="card__title">All Sprints</h3>
+        <div class="grid">
+          <% sprints.forEach(function (sprint) { %>
+            <a href="/sprints/<%= sprint.id %>" class="card" style="text-decoration: none; color: inherit;">
+              <div style="font-weight: 800;"><%= sprint.name %></div>
+              <div class="muted"><%= sprint.goal || "No goal" %></div>
+              <div style="margin-top: 10px;">
+                <span class="badge badge--<%= sprint.status === 'active' ? 'active' : sprint.status === 'completed' ? 'completed' : 'planned' %>">
+                  <%= sprint.status %>
+                </span>
+              </div>
+            </a>
+          <% }) %>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>

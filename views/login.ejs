@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title><%= pageTitle %></title>
+    <link rel="stylesheet" href="/css/styles.css" />
+  </head>
+  <body class="auth-mode">
+    <main class="main" style="min-height: 100vh; display: grid; place-items: center;">
+      <section class="card" style="max-width: 440px; width: 100%;">
+        <div class="muted">Server-Side Rendered Login</div>
+        <h1 class="card__title" style="margin-top: 8px;">Sprinto Backend Evaluation</h1>
+        <p class="muted">Use the API-powered SPA for full interaction, or this EJS page to demonstrate SSR.</p>
+
+        <% if (error) { %>
+          <div class="badge badge--planned" style="display: inline-block; margin: 10px 0 16px;"><%= error %></div>
+        <% } %>
+
+        <form id="ssrLoginForm" class="grid" style="margin-top: 16px;">
+          <div class="field">
+            <div class="label">Email</div>
+            <input class="input" name="email" type="email" value="alex@company.com" required />
+          </div>
+          <div class="field">
+            <div class="label">Password</div>
+            <input class="input" name="password" type="password" value="admin123" required />
+          </div>
+          <button class="btn btn--primary" type="submit">Sign In</button>
+        </form>
+
+        <div class="muted" style="margin-top: 16px;">
+          Demo accounts: <code>alex@company.com / admin123</code> and <code>demo@sprinto.dev / demo123</code>
+        </div>
+        <div style="margin-top: 16px;">
+          <a class="btn" href="/">Open existing SPA</a>
+        </div>
+      </section>
+    </main>
+
+    <script>
+      document.getElementById("ssrLoginForm").addEventListener("submit", async function (event) {
+        event.preventDefault();
+
+        const form = new FormData(event.target);
+        const response = await fetch("/api/auth/login", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            email: form.get("email"),
+            password: form.get("password"),
+          }),
+        });
+
+        if (response.ok) {
+          window.location.href = "/dashboard";
+          return;
+        }
+
+        const payload = await response.json().catch(() => ({ message: "Unable to log in" }));
+        window.alert(payload.message || "Unable to log in");
+      });
+    </script>
+  </body>
+</html>
