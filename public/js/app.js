@@ -88,6 +88,17 @@ function mountShell() {
   brand?.addEventListener("keydown", (e) => {
     if (e.key === "Enter" || e.key === " ") window.location.hash = brand.getAttribute("data-nav");
   });
+  document.getElementById("topNewIssueBtn")?.addEventListener("click", () => {
+    const current = route();
+    if (current === "/board") {
+      const boardBtn = document.getElementById("newIssueBtn");
+      if (boardBtn) {
+        boardBtn.click();
+        return;
+      }
+    }
+    window.location.hash = "#/board";
+  });
 
   // Logout
   document.getElementById("logoutBtn")?.addEventListener("click", async () => {
@@ -137,36 +148,49 @@ function dashboardView() {
   const active = state.activeSprint;
   const sprintsTotal = state.sprints.length;
   const membersTotal = (state.team.members || []).length;
+  const todoCount = state.issues.filter((issue) => issue.status === "todo").length;
+  const inProgressCount = state.issues.filter((issue) => issue.status === "in_progress").length;
+  const doneCount = state.issues.filter((issue) => issue.status === "done").length;
+  const completionRate = state.issues.length ? Math.round((doneCount / state.issues.length) * 100) : 0;
 
   return `
-    <div class="grid grid--3">
-      <div class="card">
-        <h3 class="card__title">Active sprint</h3>
+    <div class="grid grid--4">
+      <div class="card metric-card">
+        <div class="metric-card__head"><span class="metric-card__icon">◉</span><h3 class="card__title">Active sprint</h3></div>
         ${
           active
             ? `<div style="font-weight:900">${active.name}</div>
                <div class="muted">${active.goal || "No goal set"}</div>
-               <div style="height:10px"></div>
+               <div style="height:12px"></div>
                <div class="row">
                  <a class="btn btn--primary" href="#/board">Open board</a>
-                 <a class="btn" href="#/backlog">Backlog</a>
+                 <a class="btn btn--ghost" href="#/backlog">Backlog</a>
                </div>`
             : `<div class="muted">No active sprint. Create one and start it.</div>
-               <div style="height:10px"></div>
+               <div style="height:12px"></div>
                <a class="btn btn--primary" href="#/sprints">Go to Sprint Management</a>`
         }
       </div>
-      <div class="card">
-        <h3 class="card__title">Sprints</h3>
+      <div class="card metric-card">
+        <div class="metric-card__head"><span class="metric-card__icon">◫</span><h3 class="card__title">Sprints</h3></div>
         <div class="kpi">${sprintsTotal}<span class="muted"> total</span></div>
-        <div style="height:10px"></div>
-        <a class="btn" href="#/sprints">Manage sprints</a>
+        <div style="height:12px"></div>
+        <a class="btn btn--ghost" href="#/sprints">Manage sprints</a>
       </div>
-      <div class="card">
-        <h3 class="card__title">Team</h3>
+      <div class="card metric-card">
+        <div class="metric-card__head"><span class="metric-card__icon">◌</span><h3 class="card__title">Team</h3></div>
         <div class="kpi">${membersTotal}<span class="muted"> members</span></div>
-        <div style="height:10px"></div>
-        <a class="btn" href="#/team">Manage team</a>
+        <div style="height:12px"></div>
+        <a class="btn btn--ghost" href="#/team">Manage team</a>
+      </div>
+      <div class="card metric-card">
+        <div class="metric-card__head"><span class="metric-card__icon">✓</span><h3 class="card__title">Delivery</h3></div>
+        <div class="kpi">${completionRate}<span class="muted">% done</span></div>
+        <div class="row">
+          <span class="badge badge--planned">Todo ${todoCount}</span>
+          <span class="badge badge--inprogress">In Progress ${inProgressCount}</span>
+          <span class="badge badge--completed">Done ${doneCount}</span>
+        </div>
       </div>
     </div>
   `;
@@ -239,6 +263,7 @@ async function render() {
 
   if (p === "/dashboard") {
     setCrumb("Dashboard");
+    state.issues = await loadAllIssues();
     setPage(dashboardView());
     return;
   }

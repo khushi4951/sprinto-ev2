@@ -8,43 +8,46 @@
     <script src="/socket.io/socket.io.js"></script>
   </head>
   <body>
-    <main class="main" style="padding: 32px;">
-      <div class="row">
+    <main class="main">
+      <header class="topbar">
         <div>
-          <div class="muted">Server-Side Rendered Sprint Page</div>
-          <h1 style="margin: 6px 0 0;"><%= sprint.name %></h1>
-          <div class="muted"><%= sprint.goal || "No sprint goal" %></div>
+          <div class="muted">SSR Sprint View</div>
+          <div class="crumb"><%= sprint.name %></div>
         </div>
-        <div class="spacer"></div>
-        <a class="btn" href="/dashboard">Dashboard</a>
-        <a class="btn" href="/">SPA Board</a>
-      </div>
-
-      <section class="card" style="margin-top: 24px;">
         <div class="row">
-          <span class="badge badge--<%= sprint.status === 'active' ? 'active' : sprint.status === 'completed' ? 'completed' : 'planned' %>">
-            <%= sprint.status %>
-          </span>
-          <span class="spacer"></span>
-          <span class="muted">Signed in as <%= user.name %></span>
+          <a class="btn btn--ghost" href="/dashboard">Dashboard</a>
+          <a class="btn btn--primary" href="/">SPA Board</a>
         </div>
-      </section>
+      </header>
 
-      <section class="card" style="margin-top: 24px;">
-        <h3 class="card__title">Sprint Issues</h3>
-        <div id="ssrUpdates" class="muted" style="margin-bottom: 12px;">Listening for board updates...</div>
-        <div class="grid">
-          <% issues.forEach(function (issue) { %>
-            <article class="card">
-              <div style="font-weight: 800;"><%= issue.title %></div>
-              <div class="muted"><%= issue.description || "No description" %></div>
-              <div style="margin-top: 10px;">Status: <strong><%= issue.status %></strong></div>
-            </article>
-          <% }) %>
-          <% if (!issues.length) { %>
-            <div class="muted">No issues assigned to this sprint.</div>
-          <% } %>
-        </div>
+      <section class="content">
+        <section class="card">
+          <div class="row">
+            <span class="badge badge--<%= sprint.status === 'active' ? 'active' : sprint.status === 'completed' ? 'completed' : 'planned' %>"><%= sprint.status %></span>
+            <span class="chip">Signed in as <%= user.name %></span>
+          </div>
+          <p class="muted" style="margin-bottom:0;"><%= sprint.goal || "No sprint goal" %></p>
+        </section>
+
+        <section class="card" style="margin-top: 16px;">
+          <h3 class="card__title">Sprint Issues</h3>
+          <div id="ssrUpdates" class="muted" style="margin-bottom: 12px;">Listening for board updates...</div>
+          <div class="grid grid--2">
+            <% issues.forEach(function (issue) { %>
+              <article class="issue">
+                <div class="issue__title"><%= issue.title %></div>
+                <div class="issue__desc muted"><%= issue.description || "No description" %></div>
+                <div class="issue__meta">
+                  <span class="badge badge--outline">Status</span>
+                  <span class="badge badge--planned"><%= issue.status %></span>
+                </div>
+              </article>
+            <% }) %>
+            <% if (!issues.length) { %>
+              <div class="muted">No issues assigned to this sprint.</div>
+            <% } %>
+          </div>
+        </section>
       </section>
     </main>
 

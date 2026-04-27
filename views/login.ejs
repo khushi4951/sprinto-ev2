@@ -7,17 +7,21 @@
     <link rel="stylesheet" href="/css/styles.css" />
   </head>
   <body class="auth-mode">
-    <main class="main" style="min-height: 100vh; display: grid; place-items: center;">
-      <section class="card" style="max-width: 440px; width: 100%;">
-        <div class="muted">Server-Side Rendered Login</div>
-        <h1 class="card__title" style="margin-top: 8px;">Sprinto Backend Evaluation</h1>
-        <p class="muted">Use the API-powered SPA for full interaction, or this EJS page to demonstrate SSR.</p>
+    <main class="main" style="min-height:100vh; display:grid; place-items:center;">
+      <section class="auth__panel" style="max-width:460px; width:100%;">
+        <div class="auth__brand">
+          <div class="brand__logo">SP</div>
+          <div>
+            <div class="auth__title">SSR Sign In</div>
+            <div class="muted">Same Sprinto design language, server-rendered.</div>
+          </div>
+        </div>
 
         <% if (error) { %>
-          <div class="badge badge--planned" style="display: inline-block; margin: 10px 0 16px;"><%= error %></div>
+          <div class="badge badge--danger" style="display:inline-block; margin: 0 0 14px;"><%= error %></div>
         <% } %>
 
-        <form id="ssrLoginForm" class="grid" style="margin-top: 16px;">
+        <form id="ssrLoginForm" class="grid">
           <div class="field">
             <div class="label">Email</div>
             <input class="input" name="email" type="email" value="alex@company.com" required />
@@ -29,11 +33,11 @@
           <button class="btn btn--primary" type="submit">Sign In</button>
         </form>
 
-        <div class="muted" style="margin-top: 16px;">
+        <div class="muted" style="margin-top:14px;">
           Demo accounts: <code>alex@company.com / admin123</code> and <code>demo@sprinto.dev / demo123</code>
         </div>
-        <div style="margin-top: 16px;">
-          <a class="btn" href="/">Open existing SPA</a>
+        <div class="row" style="margin-top:14px;">
+          <a class="btn btn--ghost" href="/">Open SPA</a>
         </div>
       </section>
     </main>

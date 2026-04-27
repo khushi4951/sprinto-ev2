@@ -3,10 +3,10 @@ export function sidebarHtml() {
     <aside class="sidebar" id="sidebar">
       <div class="sidebar__top">
         <div class="brand" role="button" tabindex="0" data-nav="#/dashboard" aria-label="Go to dashboard">
-          <div class="brand__logo">S</div>
+          <div class="brand__logo">SP</div>
           <div class="brand__text">
             <div class="brand__name">Sprinto</div>
-            <div class="brand__tag">Sprint Management</div>
+            <div class="brand__tag">Product Delivery Hub</div>
           </div>
         </div>
         <button class="icon-btn sidebar__toggle" id="sidebarToggle" aria-label="Toggle sidebar">
@@ -15,11 +15,11 @@ export function sidebarHtml() {
       </div>
 
       <nav class="nav" aria-label="Sidebar navigation">
-        <a class="nav__link" href="#/dashboard" data-route>Dashboard</a>
-        <a class="nav__link" href="#/sprints" data-route>Sprint Management</a>
-        <a class="nav__link" href="#/board" data-route>Kanban Board</a>
-        <a class="nav__link" href="#/backlog" data-route>Backlog View</a>
-        <a class="nav__link" href="#/team" data-route>Team Members</a>
+        <a class="nav__link" href="#/dashboard" data-route><span class="nav__icon">▣</span><span>Dashboard</span></a>
+        <a class="nav__link" href="#/sprints" data-route><span class="nav__icon">◫</span><span>Sprint Management</span></a>
+        <a class="nav__link" href="#/board" data-route><span class="nav__icon">☰</span><span>Kanban Board</span></a>
+        <a class="nav__link" href="#/backlog" data-route><span class="nav__icon">◉</span><span>Backlog View</span></a>
+        <a class="nav__link" href="#/team" data-route><span class="nav__icon">◌</span><span>Team Members</span></a>
       </nav>
 
       <div class="sidebar__bottom">
